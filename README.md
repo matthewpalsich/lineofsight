@@ -1,1 +1,1 @@
-# lineofsight
+# lineofsight project README file
