@@ -3,6 +3,7 @@
 # Check arguments
 if [ "$#" -ne 1 ]; then
 	echo "Usage: flash.sh [on/off]"
+	exit 1
 fi
 
 # Get arguement
