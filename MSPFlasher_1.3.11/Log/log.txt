@@ -1,0 +1,487 @@
+Sat Jan 28 13:13:35 2017:	* -----/|-------------------------------------------------------------------- *
+Sat Jan 28 13:13:35 2017:	*     / |__                                                                   *
+Sat Jan 28 13:13:35 2017:	*    /_   /   MSP Flasher v1.3.11                                             *
+Sat Jan 28 13:13:35 2017:	*      | /                                                                    *
+Sat Jan 28 13:13:35 2017:	* -----|/-------------------------------------------------------------------- *
+Sat Jan 28 13:13:35 2017:	*
+Sat Jan 28 13:13:35 2017:	* Evaluating triggers...done
+Sat Jan 28 13:13:35 2017:	  No arguments. Aborting.
+Sat Jan 28 13:13:35 2017:	*******************************************************************************
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 Usage: MSP430Flasher [OPTIONS]                                                
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -n DEVICE_NAME              (optional for MSP430, required for MSP432)        
+Sat Jan 28 13:13:35 2017:	                             specifies the name of the target MSP - prompt in  
+Sat Jan 28 13:13:35 2017:	                             case of mismatch                                  
+Sat Jan 28 13:13:35 2017:	                             Use -n NO_TARGET to run MSP Flasher without       
+Sat Jan 28 13:13:35 2017:	                             attempting a target connection (FET detection or  
+Sat Jan 28 13:13:35 2017:	                             FET firmware update only)                         
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -i (TI)USB | DETECT |       specifies the COM port of a connected debug tool  
+Sat Jan 28 13:13:35 2017:	    COMn (Win) |             (default: TIUSB/USB = first detected FET tool is  
+Sat Jan 28 13:13:35 2017:	    ttyACMn (Linux) |        used) For info on how to connect to specific eZ-  
+Sat Jan 28 13:13:35 2017:	    usbmodem* (OSX)          tools, see the MSP Flasher manual.                
+Sat Jan 28 13:13:35 2017:	                             Use -i DETECT  to execute a FET detection sweep,  
+Sat Jan 28 13:13:35 2017:	                             displaying detailed info about all connected debug
+Sat Jan 28 13:13:35 2017:	                             tools. User is prompted to pick a FET.            
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -j fast | medium | slow     sets FET speed for JTAG/SBW - only applicable for 
+Sat Jan 28 13:13:35 2017:	                             MSP-FET! Option will be ignored for all other FET 
+Sat Jan 28 13:13:35 2017:	                             tools. Default = medium.                          
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -a                          non-intrusive target connection: use this switch  
+Sat Jan 28 13:13:35 2017:	                             if no reset should be applied to the target device
+Sat Jan 28 13:13:35 2017:	                             on start-up. Correct target device name needs to  
+Sat Jan 28 13:13:35 2017:	                             be specified using the -n switch!                 
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -r [filenname,mem_sect]     specifies a memory section to read from and a file
+Sat Jan 28 13:13:35 2017:	                             to write to. mem_sect: RAM, INFO, MAIN, BSL or    
+Sat Jan 28 13:13:35 2017:	                             specific memory areas: 0x****-0x*****             
+Sat Jan 28 13:13:35 2017:	                             The file extension of 'filename' determines the   
+Sat Jan 28 13:13:35 2017:	                             data format: .txt = TI-TXT, .hex/.a43 = Intel-Hex 
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -w filenname                specifies a file for device programming. Supported
+Sat Jan 28 13:13:35 2017:	                             data formats: TI-TXT (.txt), Intel-Hex (.hex/.a43)
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -b                          unlocks BSL memory for writing                    
+Sat Jan 28 13:13:35 2017:	                             (use only with -w switch)                         
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -u                          unlocks InfoA memory for writing                  
+Sat Jan 28 13:13:35 2017:	                             (use only with -w switch)                         
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -e ERASE_ALL |              Erase memory. Default: ERASE_ALL (INFO&MAIN)      
+Sat Jan 28 13:13:35 2017:	    ERASE_MAIN |             ERASE_MAIN: erase MAIN memory only                
+Sat Jan 28 13:13:35 2017:	    ERASE_SEGMENT |          ERASE_SEGMENT: erase segment to be programmed only
+Sat Jan 28 13:13:35 2017:	    ERASE_TOTAL |            ERASE_TOTAL: applicable for FR5xx/FR6xx only!     
+Sat Jan 28 13:13:35 2017:	    ERASE_USER_CODE |        ERASE_USER_CODE: applicable for FR4xx only!       
+Sat Jan 28 13:13:35 2017:	    NO_ERASE                 NO_ERASE: use only with -w switch                 
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -v filename (optional)      triggers verification of the target memory against
+Sat Jan 28 13:13:35 2017:	                             a target code file. If -w is used, no argument is 
+Sat Jan 28 13:13:35 2017:	                             required. For a stand-alone verify, provide the   
+Sat Jan 28 13:13:35 2017:	                             path to a target code file as an argument.        
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -z [exit_spec,...]          specifies state of device on exit                 
+Sat Jan 28 13:13:35 2017:	                             (view available 'exit_spec's using -x switch)     
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -g                          switches log OFF (default: ON)                    
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -q                          triggers QUIET MODE (no system messages displayed)
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -d [breakpoint addresses]   specifies addresses for hardware breakpoints and  
+Sat Jan 28 13:13:35 2017:	                             triggers RUN_TO_BREAKPOINT mode                   
+Sat Jan 28 13:13:35 2017:	                             WARNING! This option is deprecated and will no    
+Sat Jan 28 13:13:35 2017:	                             longer be maintained. All breakpoint functionality
+Sat Jan 28 13:13:35 2017:	                             will be removed in a future version of MSP Flasher
+Sat Jan 28 13:13:35 2017:	                                                                               
+Sat Jan 28 13:13:35 2017:	 -t timeout_in_ms            specifies the breakpoint timeout (in milliseconds)
+Sat Jan 28 13:13:35 2017:	                             WARNING! This option is deprecated and will no    
+Sat Jan 28 13:13:35 2017:	                             longer be maintained. All breakpoint functionality
+SSat Jan 28 13:15:04 2017:	* -----/|-------------------------------------------------------------------- *
+Sat Jan 28 13:15:04 2017:	*     / |__                                                                   *
+Sat Jan 28 13:15:04 2017:	*    /_   /   MSP Flasher v1.3.11                                             *
+Sat Jan 28 13:15:04 2017:	*      | /                                                                    *
+Sat Jan 28 13:15:04 2017:	* -----|/-------------------------------------------------------------------- *
+Sat Jan 28 13:15:04 2017:	*
+Sat Jan 28 13:15:04 2017:	* Evaluating triggers...done
+Sat Jan 28 13:15:04 2017:	  No arguments. Aborting.
+Sat Jan 28 13:15:04 2017:	*******************************************************************************
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 Usage: MSP430Flasher [OPTIONS]                                                
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -n DEVICE_NAME              (optional for MSP430, required for MSP432)        
+Sat Jan 28 13:15:04 2017:	                             specifies the name of the target MSP - prompt in  
+Sat Jan 28 13:15:04 2017:	                             case of mismatch                                  
+Sat Jan 28 13:15:04 2017:	                             Use -n NO_TARGET to run MSP Flasher without       
+Sat Jan 28 13:15:04 2017:	                             attempting a target connection (FET detection or  
+Sat Jan 28 13:15:04 2017:	                             FET firmware update only)                         
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -i (TI)USB | DETECT |       specifies the COM port of a connected debug tool  
+Sat Jan 28 13:15:04 2017:	    COMn (Win) |             (default: TIUSB/USB = first detected FET tool is  
+Sat Jan 28 13:15:04 2017:	    ttyACMn (Linux) |        used) For info on how to connect to specific eZ-  
+Sat Jan 28 13:15:04 2017:	    usbmodem* (OSX)          tools, see the MSP Flasher manual.                
+Sat Jan 28 13:15:04 2017:	                             Use -i DETECT  to execute a FET detection sweep,  
+Sat Jan 28 13:15:04 2017:	                             displaying detailed info about all connected debug
+Sat Jan 28 13:15:04 2017:	                             tools. User is prompted to pick a FET.            
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -j fast | medium | slow     sets FET speed for JTAG/SBW - only applicable for 
+Sat Jan 28 13:15:04 2017:	                             MSP-FET! Option will be ignored for all other FET 
+Sat Jan 28 13:15:04 2017:	                             tools. Default = medium.                          
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -a                          non-intrusive target connection: use this switch  
+Sat Jan 28 13:15:04 2017:	                             if no reset should be applied to the target device
+Sat Jan 28 13:15:04 2017:	                             on start-up. Correct target device name needs to  
+Sat Jan 28 13:15:04 2017:	                             be specified using the -n switch!                 
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -r [filenname,mem_sect]     specifies a memory section to read from and a file
+Sat Jan 28 13:15:04 2017:	                             to write to. mem_sect: RAM, INFO, MAIN, BSL or    
+Sat Jan 28 13:15:04 2017:	                             specific memory areas: 0x****-0x*****             
+Sat Jan 28 13:15:04 2017:	                             The file extension of 'filename' determines the   
+Sat Jan 28 13:15:04 2017:	                             data format: .txt = TI-TXT, .hex/.a43 = Intel-Hex 
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -w filenname                specifies a file for device programming. Supported
+Sat Jan 28 13:15:04 2017:	                             data formats: TI-TXT (.txt), Intel-Hex (.hex/.a43)
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -b                          unlocks BSL memory for writing                    
+Sat Jan 28 13:15:04 2017:	                             (use only with -w switch)                         
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -u                          unlocks InfoA memory for writing                  
+Sat Jan 28 13:15:04 2017:	                             (use only with -w switch)                         
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -e ERASE_ALL |              Erase memory. Default: ERASE_ALL (INFO&MAIN)      
+Sat Jan 28 13:15:04 2017:	    ERASE_MAIN |             ERASE_MAIN: erase MAIN memory only                
+Sat Jan 28 13:15:04 2017:	    ERASE_SEGMENT |          ERASE_SEGMENT: erase segment to be programmed only
+Sat Jan 28 13:15:04 2017:	    ERASE_TOTAL |            ERASE_TOTAL: applicable for FR5xx/FR6xx only!     
+Sat Jan 28 13:15:04 2017:	    ERASE_USER_CODE |        ERASE_USER_CODE: applicable for FR4xx only!       
+Sat Jan 28 13:15:04 2017:	    NO_ERASE                 NO_ERASE: use only with -w switch                 
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -v filename (optional)      triggers verification of the target memory against
+Sat Jan 28 13:15:04 2017:	                             a target code file. If -w is used, no argument is 
+Sat Jan 28 13:15:04 2017:	                             required. For a stand-alone verify, provide the   
+Sat Jan 28 13:15:04 2017:	                             path to a target code file as an argument.        
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -z [exit_spec,...]          specifies state of device on exit                 
+Sat Jan 28 13:15:04 2017:	                             (view available 'exit_spec's using -x switch)     
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -g                          switches log OFF (default: ON)                    
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -q                          triggers QUIET MODE (no system messages displayed)
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -d [breakpoint addresses]   specifies addresses for hardware breakpoints and  
+Sat Jan 28 13:15:04 2017:	                             triggers RUN_TO_BREAKPOINT mode                   
+Sat Jan 28 13:15:04 2017:	                             WARNING! This option is deprecated and will no    
+Sat Jan 28 13:15:04 2017:	                             longer be maintained. All breakpoint functionality
+Sat Jan 28 13:15:04 2017:	                             will be removed in a future version of MSP Flasher
+Sat Jan 28 13:15:04 2017:	                                                                               
+Sat Jan 28 13:15:04 2017:	 -t timeout_in_ms            specifies the breakpoint timeout (in milliseconds)
+Sat Jan 28 13:15:04 2017:	                             WARNING! This option is deprecated and will no    
+Sat Jan 28 13:15:04 2017:	                             longer be maintained. All breakpoint functionality
+SSat Jan 28 13:17:00 2017:	* -----/|-------------------------------------------------------------------- *
+Sat Jan 28 13:17:00 2017:	*     / |__                                                                   *
+Sat Jan 28 13:17:00 2017:	*    /_   /   MSP Flasher v1.3.11                                             *
+Sat Jan 28 13:17:00 2017:	*      | /                                                                    *
+Sat Jan 28 13:17:00 2017:	* -----|/-------------------------------------------------------------------- *
+Sat Jan 28 13:17:00 2017:	*
+Sat Jan 28 13:17:00 2017:	* Evaluating triggers...done
+Sat Jan 28 13:17:00 2017:	* Checking for available FET debuggers: 
+Sat Jan 28 13:17:00 2017:	* Couldn't find any connected USB FETs!
+Sat Jan 28 13:17:00 2017:	* Starting target code execution...done
+Sat Jan 28 13:17:00 2017:	* Disconnecting from device...done
+Sat Jan 28 13:17:00 2017:	* 
+Sat Jan 28 13:17:00 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:17:00 2017:	* Driver      : closed (MSP DebugStack not initialized)
+Sat Jan 28 13:17:00 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:17:00 2017:	*/
+Sat Jan 28 13:19:11 2017:	* -----/|-------------------------------------------------------------------- *
+Sat Jan 28 13:19:11 2017:	*     / |__                                                                   *
+Sat Jan 28 13:19:11 2017:	*    /_   /   MSP Flasher v1.3.11                                             *
+Sat Jan 28 13:19:11 2017:	*      | /                                                                    *
+Sat Jan 28 13:19:11 2017:	* -----|/-------------------------------------------------------------------- *
+Sat Jan 28 13:19:11 2017:	*
+Sat Jan 28 13:19:11 2017:	* Evaluating triggers...done
+Sat Jan 28 13:19:11 2017:	* Checking for available FET debuggers: 
+Sat Jan 28 13:19:11 2017:	* Found USB FET @ usbmodem1411 <- Selected
+Sat Jan 28 13:19:11 2017:	* Initializing interface @ usbmodem1411...done
+Sat Jan 28 13:19:12 2017:	* Checking firmware compatibility: 
+Sat Jan 28 13:19:12 2017:	* FET firmware is up to date.
+Sat Jan 28 13:19:12 2017:	* Reading FW version...done
+Sat Jan 28 13:19:12 2017:	* Setting VCC to 3000 mV...done
+Sat Jan 28 13:19:18 2017:	* Accessing device...done
+Sat Jan 28 13:19:18 2017:	* Reading device information...done
+Sat Jan 28 13:19:18 2017:	* Loading file into device...done
+Sat Jan 28 13:19:19 2017:	* Verifying memory (../GCC/proj/LOS/g2553/hex_files/blink.hex)...done
+Sat Jan 28 13:19:20 2017:	* 
+Sat Jan 28 13:19:20 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:19:20 2017:	* Arguments   : -w ../GCC/proj/LOS/g2553/hex_files/blink.hex -v -z [VCC] 
+Sat Jan 28 13:19:20 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:19:20 2017:	* Driver      : loaded
+Sat Jan 28 13:19:20 2017:	* Dll Version : 30901002
+Sat Jan 28 13:19:20 2017:	* FwVersion   : 30900000
+Sat Jan 28 13:19:20 2017:	* Interface   : TIUSB
+Sat Jan 28 13:19:20 2017:	* HwVersion   : U 3.0
+Sat Jan 28 13:19:20 2017:	* JTAG Mode   : AUTO
+Sat Jan 28 13:19:20 2017:	* Device      : MSP430G2xx3
+Sat Jan 28 13:19:20 2017:	* EEM         : Level 1, ClockCntrl 1
+Sat Jan 28 13:19:20 2017:	* Erase Mode  : ERASE_ALL
+Sat Jan 28 13:19:20 2017:	* Prog.File   : ../GCC/proj/LOS/g2553/hex_files/blink.hex
+Sat Jan 28 13:19:20 2017:	* Verified    : TRUE
+Sat Jan 28 13:19:20 2017:	* BSL Unlock  : FALSE
+Sat Jan 28 13:19:20 2017:	* InfoA Access: FALSE
+Sat Jan 28 13:19:20 2017:	* VCC ON      : 3000 mV
+Sat Jan 28 13:19:20 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:19:20 2017:	* Starting target code execution...done
+Sat Jan 28 13:19:20 2017:	* Disconnecting from device...done
+Sat Jan 28 13:19:20 2017:	* 
+Sat Jan 28 13:19:20 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:19:20 2017:	* Driver      : closed (No error)
+Sat Jan 28 13:19:20 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:19:20 2017:	*/
+Sat Jan 28 13:28:58 2017:	* -----/|-------------------------------------------------------------------- *
+Sat Jan 28 13:28:58 2017:	*     / |__                                                                   *
+Sat Jan 28 13:28:58 2017:	*    /_   /   MSP Flasher v1.3.11                                             *
+Sat Jan 28 13:28:58 2017:	*      | /                                                                    *
+Sat Jan 28 13:28:58 2017:	* -----|/-------------------------------------------------------------------- *
+Sat Jan 28 13:28:58 2017:	*
+Sat Jan 28 13:28:58 2017:	* Evaluating triggers...
+Sat Jan 28 13:28:58 2017:	* file extension unknown -- w
+
+Sat Jan 28 13:28:58 2017:	
+Sat Jan 28 13:28:58 2017:	*******************************************************************************
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 Usage: MSP430Flasher [OPTIONS]                                                
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -n DEVICE_NAME              (optional for MSP430, required for MSP432)        
+Sat Jan 28 13:28:58 2017:	                             specifies the name of the target MSP - prompt in  
+Sat Jan 28 13:28:58 2017:	                             case of mismatch                                  
+Sat Jan 28 13:28:58 2017:	                             Use -n NO_TARGET to run MSP Flasher without       
+Sat Jan 28 13:28:58 2017:	                             attempting a target connection (FET detection or  
+Sat Jan 28 13:28:58 2017:	                             FET firmware update only)                         
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -i (TI)USB | DETECT |       specifies the COM port of a connected debug tool  
+Sat Jan 28 13:28:58 2017:	    COMn (Win) |             (default: TIUSB/USB = first detected FET tool is  
+Sat Jan 28 13:28:58 2017:	    ttyACMn (Linux) |        used) For info on how to connect to specific eZ-  
+Sat Jan 28 13:28:58 2017:	    usbmodem* (OSX)          tools, see the MSP Flasher manual.                
+Sat Jan 28 13:28:58 2017:	                             Use -i DETECT  to execute a FET detection sweep,  
+Sat Jan 28 13:28:58 2017:	                             displaying detailed info about all connected debug
+Sat Jan 28 13:28:58 2017:	                             tools. User is prompted to pick a FET.            
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -j fast | medium | slow     sets FET speed for JTAG/SBW - only applicable for 
+Sat Jan 28 13:28:58 2017:	                             MSP-FET! Option will be ignored for all other FET 
+Sat Jan 28 13:28:58 2017:	                             tools. Default = medium.                          
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -a                          non-intrusive target connection: use this switch  
+Sat Jan 28 13:28:58 2017:	                             if no reset should be applied to the target device
+Sat Jan 28 13:28:58 2017:	                             on start-up. Correct target device name needs to  
+Sat Jan 28 13:28:58 2017:	                             be specified using the -n switch!                 
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -r [filenname,mem_sect]     specifies a memory section to read from and a file
+Sat Jan 28 13:28:58 2017:	                             to write to. mem_sect: RAM, INFO, MAIN, BSL or    
+Sat Jan 28 13:28:58 2017:	                             specific memory areas: 0x****-0x*****             
+Sat Jan 28 13:28:58 2017:	                             The file extension of 'filename' determines the   
+Sat Jan 28 13:28:58 2017:	                             data format: .txt = TI-TXT, .hex/.a43 = Intel-Hex 
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -w filenname                specifies a file for device programming. Supported
+Sat Jan 28 13:28:58 2017:	                             data formats: TI-TXT (.txt), Intel-Hex (.hex/.a43)
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -b                          unlocks BSL memory for writing                    
+Sat Jan 28 13:28:58 2017:	                             (use only with -w switch)                         
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -u                          unlocks InfoA memory for writing                  
+Sat Jan 28 13:28:58 2017:	                             (use only with -w switch)                         
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -e ERASE_ALL |              Erase memory. Default: ERASE_ALL (INFO&MAIN)      
+Sat Jan 28 13:28:58 2017:	    ERASE_MAIN |             ERASE_MAIN: erase MAIN memory only                
+Sat Jan 28 13:28:58 2017:	    ERASE_SEGMENT |          ERASE_SEGMENT: erase segment to be programmed only
+Sat Jan 28 13:28:58 2017:	    ERASE_TOTAL |            ERASE_TOTAL: applicable for FR5xx/FR6xx only!     
+Sat Jan 28 13:28:58 2017:	    ERASE_USER_CODE |        ERASE_USER_CODE: applicable for FR4xx only!       
+Sat Jan 28 13:28:58 2017:	    NO_ERASE                 NO_ERASE: use only with -w switch                 
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -v filename (optional)      triggers verification of the target memory against
+Sat Jan 28 13:28:58 2017:	                             a target code file. If -w is used, no argument is 
+Sat Jan 28 13:28:58 2017:	                             required. For a stand-alone verify, provide the   
+Sat Jan 28 13:28:58 2017:	                             path to a target code file as an argument.        
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -z [exit_spec,...]          specifies state of device on exit                 
+Sat Jan 28 13:28:58 2017:	                             (view available 'exit_spec's using -x switch)     
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -g                          switches log OFF (default: ON)                    
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -q                          triggers QUIET MODE (no system messages displayed)
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -d [breakpoint addresses]   specifies addresses for hardware breakpoints and  
+Sat Jan 28 13:28:58 2017:	                             triggers RUN_TO_BREAKPOINT mode                   
+Sat Jan 28 13:28:58 2017:	                             WARNING! This option is deprecated and will no    
+Sat Jan 28 13:28:58 2017:	                             longer be maintained. All breakpoint functionality
+Sat Jan 28 13:28:58 2017:	                             will be removed in a future version of MSP Flasher
+Sat Jan 28 13:28:58 2017:	                                                                               
+Sat Jan 28 13:28:58 2017:	 -t timeout_in_ms            specifies the breakpoint timeout (in milliseconds)
+Sat Jan 28 13:28:58 2017:	                             WARNING! This option is deprecated and will no    
+Sat Jan 28 13:28:58 2017:	                             longer be maintained. AlSat Jan 28 13:29:41 2017:	* -----/|-------------------------------------------------------------------- *
+Sat Jan 28 13:29:41 2017:	*     / |__                                                                   *
+Sat Jan 28 13:29:41 2017:	*    /_   /   MSP Flasher v1.3.11                                             *
+Sat Jan 28 13:29:41 2017:	*      | /                                                                    *
+Sat Jan 28 13:29:41 2017:	* -----|/-------------------------------------------------------------------- *
+Sat Jan 28 13:29:41 2017:	*
+Sat Jan 28 13:29:41 2017:	* Evaluating triggers...done
+Sat Jan 28 13:29:41 2017:	* Checking for available FET debuggers: 
+Sat Jan 28 13:29:42 2017:	* Found USB FET @ usbmodem1411 <- Selected
+Sat Jan 28 13:29:42 2017:	* Initializing interface @ usbmodem1411...done
+Sat Jan 28 13:29:42 2017:	* Checking firmware compatibility: 
+Sat Jan 28 13:29:42 2017:	* FET firmware is up to date.
+Sat Jan 28 13:29:42 2017:	* Reading FW version...done
+Sat Jan 28 13:29:42 2017:	* Setting VCC to 3000 mV...done
+Sat Jan 28 13:29:42 2017:	* Accessing device...
+Sat Jan 28 13:29:45 2017:	# Exit: 16
+Sat Jan 28 13:29:45 2017:	# ERROR: Unknown device
+Sat Jan 28 13:29:45 2017:	* Resetting device (RST/NMI)...done
+Sat Jan 28 13:29:45 2017:	* Powering down...done
+Sat Jan 28 13:29:45 2017:	* Disconnecting from device...done
+Sat Jan 28 13:29:45 2017:	* 
+Sat Jan 28 13:29:45 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:29:45 2017:	* Driver      : closed (Internal error)
+Sat Jan 28 13:29:45 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:29:45 2017:	*/
+Sat Jan 28 13:32:20 2017:	* -----/|-------------------------------------------------------------------- *
+Sat Jan 28 13:32:20 2017:	*     / |__                                                                   *
+Sat Jan 28 13:32:20 2017:	*    /_   /   MSP Flasher v1.3.11                                             *
+Sat Jan 28 13:32:20 2017:	*      | /                                                                    *
+Sat Jan 28 13:32:20 2017:	* -----|/-------------------------------------------------------------------- *
+Sat Jan 28 13:32:20 2017:	*
+Sat Jan 28 13:32:20 2017:	* Evaluating triggers...done
+Sat Jan 28 13:32:20 2017:	* Checking for available FET debuggers: 
+Sat Jan 28 13:32:21 2017:	* Found USB FET @ usbmodem1411 <- Selected
+Sat Jan 28 13:32:21 2017:	* Initializing interface @ usbmodem1411...done
+Sat Jan 28 13:32:21 2017:	* Checking firmware compatibility: 
+Sat Jan 28 13:32:21 2017:	* FET firmware is up to date.
+Sat Jan 28 13:32:21 2017:	* Reading FW version...done
+Sat Jan 28 13:32:21 2017:	* Setting VCC to 3000 mV...done
+Sat Jan 28 13:32:21 2017:	* Accessing device...done
+Sat Jan 28 13:32:22 2017:	* Reading device information...done
+Sat Jan 28 13:32:22 2017:	* Loading file into device...done
+Sat Jan 28 13:32:23 2017:	* Verifying memory (../GCC/proj/LOS/g2553/hex_files/blink.hex)...done
+Sat Jan 28 13:32:23 2017:	* 
+Sat Jan 28 13:32:23 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:23 2017:	* Arguments   : -w ../GCC/proj/LOS/g2553/hex_files/blink.hex -v -z [VCC] 
+Sat Jan 28 13:32:23 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:23 2017:	* Driver      : loaded
+Sat Jan 28 13:32:23 2017:	* Dll Version : 30901002
+Sat Jan 28 13:32:23 2017:	* FwVersion   : 30900000
+Sat Jan 28 13:32:23 2017:	* Interface   : TIUSB
+Sat Jan 28 13:32:23 2017:	* HwVersion   : U 3.0
+Sat Jan 28 13:32:23 2017:	* JTAG Mode   : AUTO
+Sat Jan 28 13:32:23 2017:	* Device      : MSP430G2xx3
+Sat Jan 28 13:32:23 2017:	* EEM         : Level 1, ClockCntrl 1
+Sat Jan 28 13:32:23 2017:	* Erase Mode  : ERASE_ALL
+Sat Jan 28 13:32:23 2017:	* Prog.File   : ../GCC/proj/LOS/g2553/hex_files/blink.hex
+Sat Jan 28 13:32:23 2017:	* Verified    : TRUE
+Sat Jan 28 13:32:23 2017:	* BSL Unlock  : FALSE
+Sat Jan 28 13:32:23 2017:	* InfoA Access: FALSE
+Sat Jan 28 13:32:23 2017:	* VCC ON      : 3000 mV
+Sat Jan 28 13:32:23 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:23 2017:	* Starting target code execution...done
+Sat Jan 28 13:32:24 2017:	* Disconnecting from device...done
+Sat Jan 28 13:32:24 2017:	* 
+Sat Jan 28 13:32:24 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:24 2017:	* Driver      : closed (No error)
+Sat Jan 28 13:32:24 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:24 2017:	*/
+Sat Jan 28 13:32:31 2017:	* -----/|-------------------------------------------------------------------- *
+Sat Jan 28 13:32:31 2017:	*     / |__                                                                   *
+Sat Jan 28 13:32:31 2017:	*    /_   /   MSP Flasher v1.3.11                                             *
+Sat Jan 28 13:32:31 2017:	*      | /                                                                    *
+Sat Jan 28 13:32:31 2017:	* -----|/-------------------------------------------------------------------- *
+Sat Jan 28 13:32:31 2017:	*
+Sat Jan 28 13:32:31 2017:	* Evaluating triggers...done
+Sat Jan 28 13:32:31 2017:	* Checking for available FET debuggers: 
+Sat Jan 28 13:32:31 2017:	* Found USB FET @ usbmodem1411 <- Selected
+Sat Jan 28 13:32:31 2017:	* Initializing interface @ usbmodem1411...done
+Sat Jan 28 13:32:31 2017:	* Checking firmware compatibility: 
+Sat Jan 28 13:32:31 2017:	* FET firmware is up to date.
+Sat Jan 28 13:32:31 2017:	* Reading FW version...done
+Sat Jan 28 13:32:31 2017:	* Setting VCC to 3000 mV...done
+Sat Jan 28 13:32:32 2017:	* Accessing device...done
+Sat Jan 28 13:32:32 2017:	* Reading device information...done
+Sat Jan 28 13:32:32 2017:	* 
+Sat Jan 28 13:32:32 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:32 2017:	* Arguments   : -z [RESET] 
+Sat Jan 28 13:32:32 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:32 2017:	* Driver      : loaded
+Sat Jan 28 13:32:32 2017:	* Dll Version : 30901002
+Sat Jan 28 13:32:32 2017:	* FwVersion   : 30900000
+Sat Jan 28 13:32:32 2017:	* Interface   : TIUSB
+Sat Jan 28 13:32:32 2017:	* HwVersion   : U 3.0
+Sat Jan 28 13:32:32 2017:	* JTAG Mode   : AUTO
+Sat Jan 28 13:32:32 2017:	* Device      : MSP430G2xx3
+Sat Jan 28 13:32:32 2017:	* EEM         : Level 1, ClockCntrl 1
+Sat Jan 28 13:32:32 2017:	* VCC OFF
+Sat Jan 28 13:32:32 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:32 2017:	* Resetting device (RST/NMI)...done
+Sat Jan 28 13:32:33 2017:	* Powering down...done
+Sat Jan 28 13:32:33 2017:	* Disconnecting from device...done
+Sat Jan 28 13:32:33 2017:	* 
+Sat Jan 28 13:32:33 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:33 2017:	* Driver      : closed (No error)
+Sat Jan 28 13:32:33 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:33 2017:	*/
+Sat Jan 28 13:32:46 2017:	* -----/|-------------------------------------------------------------------- *
+Sat Jan 28 13:32:46 2017:	*     / |__                                                                   *
+Sat Jan 28 13:32:46 2017:	*    /_   /   MSP Flasher v1.3.11                                             *
+Sat Jan 28 13:32:46 2017:	*      | /                                                                    *
+Sat Jan 28 13:32:46 2017:	* -----|/-------------------------------------------------------------------- *
+Sat Jan 28 13:32:46 2017:	*
+Sat Jan 28 13:32:46 2017:	* Evaluating triggers...done
+Sat Jan 28 13:32:46 2017:	* Checking for available FET debuggers: 
+Sat Jan 28 13:32:46 2017:	* Found USB FET @ usbmodem1411 <- Selected
+Sat Jan 28 13:32:46 2017:	* Initializing interface @ usbmodem1411...done
+Sat Jan 28 13:32:47 2017:	* Checking firmware compatibility: 
+Sat Jan 28 13:32:47 2017:	* FET firmware is up to date.
+Sat Jan 28 13:32:47 2017:	* Reading FW version...done
+Sat Jan 28 13:32:47 2017:	* Setting VCC to 3000 mV...done
+Sat Jan 28 13:32:47 2017:	* Accessing device...done
+Sat Jan 28 13:32:47 2017:	* Reading device information...done
+Sat Jan 28 13:32:47 2017:	* Loading file into device...done
+Sat Jan 28 13:32:48 2017:	* Verifying memory (../GCC/proj/LOS/g2553/hex_files/blink.hex)...done
+Sat Jan 28 13:32:49 2017:	* 
+Sat Jan 28 13:32:49 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:49 2017:	* Arguments   : -w ../GCC/proj/LOS/g2553/hex_files/blink.hex -v -z [VCC] 
+Sat Jan 28 13:32:49 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:49 2017:	* Driver      : loaded
+Sat Jan 28 13:32:49 2017:	* Dll Version : 30901002
+Sat Jan 28 13:32:49 2017:	* FwVersion   : 30900000
+Sat Jan 28 13:32:49 2017:	* Interface   : TIUSB
+Sat Jan 28 13:32:49 2017:	* HwVersion   : U 3.0
+Sat Jan 28 13:32:49 2017:	* JTAG Mode   : AUTO
+Sat Jan 28 13:32:49 2017:	* Device      : MSP430G2xx3
+Sat Jan 28 13:32:49 2017:	* EEM         : Level 1, ClockCntrl 1
+Sat Jan 28 13:32:49 2017:	* Erase Mode  : ERASE_ALL
+Sat Jan 28 13:32:49 2017:	* Prog.File   : ../GCC/proj/LOS/g2553/hex_files/blink.hex
+Sat Jan 28 13:32:49 2017:	* Verified    : TRUE
+Sat Jan 28 13:32:49 2017:	* BSL Unlock  : FALSE
+Sat Jan 28 13:32:49 2017:	* InfoA Access: FALSE
+Sat Jan 28 13:32:49 2017:	* VCC ON      : 3000 mV
+Sat Jan 28 13:32:49 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:49 2017:	* Starting target code execution...done
+Sat Jan 28 13:32:49 2017:	* Disconnecting from device...done
+Sat Jan 28 13:32:49 2017:	* 
+Sat Jan 28 13:32:49 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:49 2017:	* Driver      : closed (No error)
+Sat Jan 28 13:32:49 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:32:49 2017:	*/
+Sat Jan 28 13:33:00 2017:	* -----/|-------------------------------------------------------------------- *
+Sat Jan 28 13:33:00 2017:	*     / |__                                                                   *
+Sat Jan 28 13:33:00 2017:	*    /_   /   MSP Flasher v1.3.11                                             *
+Sat Jan 28 13:33:00 2017:	*      | /                                                                    *
+Sat Jan 28 13:33:00 2017:	* -----|/-------------------------------------------------------------------- *
+Sat Jan 28 13:33:00 2017:	*
+Sat Jan 28 13:33:00 2017:	* Evaluating triggers...done
+Sat Jan 28 13:33:00 2017:	* Checking for available FET debuggers: 
+Sat Jan 28 13:33:00 2017:	* Found USB FET @ usbmodem1411 <- Selected
+Sat Jan 28 13:33:00 2017:	* Initializing interface @ usbmodem1411...done
+Sat Jan 28 13:33:01 2017:	* Checking firmware compatibility: 
+Sat Jan 28 13:33:01 2017:	* FET firmware is up to date.
+Sat Jan 28 13:33:01 2017:	* Reading FW version...done
+Sat Jan 28 13:33:01 2017:	* Setting VCC to 3000 mV...done
+Sat Jan 28 13:33:01 2017:	* Accessing device...done
+Sat Jan 28 13:33:01 2017:	* Reading device information...done
+Sat Jan 28 13:33:02 2017:	* 
+Sat Jan 28 13:33:02 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:33:02 2017:	* Arguments   : -z [RESET] 
+Sat Jan 28 13:33:02 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:33:02 2017:	* Driver      : loaded
+Sat Jan 28 13:33:02 2017:	* Dll Version : 30901002
+Sat Jan 28 13:33:02 2017:	* FwVersion   : 30900000
+Sat Jan 28 13:33:02 2017:	* Interface   : TIUSB
+Sat Jan 28 13:33:02 2017:	* HwVersion   : U 3.0
+Sat Jan 28 13:33:02 2017:	* JTAG Mode   : AUTO
+Sat Jan 28 13:33:02 2017:	* Device      : MSP430G2xx3
+Sat Jan 28 13:33:02 2017:	* EEM         : Level 1, ClockCntrl 1
+Sat Jan 28 13:33:02 2017:	* VCC OFF
+Sat Jan 28 13:33:02 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:33:02 2017:	* Resetting device (RST/NMI)...done
+Sat Jan 28 13:33:03 2017:	* Powering down...done
+Sat Jan 28 13:33:03 2017:	* Disconnecting from device...done
+Sat Jan 28 13:33:03 2017:	* 
+Sat Jan 28 13:33:03 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:33:03 2017:	* Driver      : closed (No error)
+Sat Jan 28 13:33:03 2017:	* ----------------------------------------------------------------------------
+Sat Jan 28 13:33:03 2017:	*/
