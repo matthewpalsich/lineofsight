@@ -1,0 +1,6 @@
+# config version=3.5
+$ msp430
+  msp430_drvr=msp430.dll
+  msp430_port=TIUSB
+  msp430_vcc=3.3
+$ /
