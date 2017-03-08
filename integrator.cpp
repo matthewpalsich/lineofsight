@@ -15,12 +15,20 @@
 #define MIN_DV -1000
 #define MAX_DV 1000
 
-int16_t dv = 0; /* Change in velocity */
-int16_t dc; /* Resting state offset */
-int16_t gy; /* Current gyroscope-y sample */
-int16_t gy_prev; /* Previous gyroscope-y sample */
-volatile bool waiting = true; /* Interrupt flag */
-long int ti; /* Initial time */
+int16_t dv = 0; 				/* Change in velocity */
+int16_t dc; 					/* Resting state offset */
+int16_t gy; 					/* Current gyroscope-y sample */
+int16_t gy_prev; 				/* Previous gyroscope-y sample */
+volatile bool waiting = true; 	/* Interrupt flag */
+long int ti; 					/* Initial time */
+
+/* TODO:
+ * 	[ ] Capturing dc value (average of first 5 samples
+ * 	[ ] Handling start/stop indication by button input
+ *		[ ] Configure pin for button input (need additional info from Derek)
+ *		[ ] Create interrupt from button press (toggle boolean flag)
+ * 	[ ] Compile code (library dependencies currently unhandled)
+ */
 
 void i2c_read(uint8_t addr, uint8_t reg, uint8_t nbytes, uint8_t *data) {
 	/* Set register addresses */
@@ -31,7 +39,8 @@ void i2c_read(uint8_t addr, uint8_t reg, uint8_t nbytes, uint8_t *data) {
 	/* Read bytes */
 	Wire.requestFrom(addr, nbytes);
 	uint8_t i = 0;
-	while (Wire.available()) data[i++] = Wire.read();
+	while (Wire.available())
+		data[i++] = Wire.read();
 }
 
 void i2c_write_byte(uint8_t addr, uint8_t reg, uint8_t data) {
@@ -40,6 +49,10 @@ void i2c_write_byte(uint8_t addr, uint8_t reg, uint8_t data) {
 	Wire.write(reg);
 	Wire.write(data);
 	Wire.endTransmission();
+}
+
+void sample_dc() {
+	/* TODO: Average 5 samples to be dc value */
 }
 
 void setup() {
