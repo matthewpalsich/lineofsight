@@ -119,9 +119,9 @@ int loop() {
 	waiting = true;
 	
 	if (dv < MIN_DV) 
-		spin_left()
+		spin_left();
 	else if (dv > MAX_DV) 
-		spin_right()
+		spin_right();
 	else 
 		stop_motors();
 }
