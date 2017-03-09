@@ -15,8 +15,8 @@
 #define MIN_DV -7000
 #define MAX_DV 7000
 
-int16_t dv = 0;         /* Change in velocity */
-int16_t dc = 0;           /* Resting state offset */
+int32_t dv = 0;         /* Change in velocity */
+int16_t dc = -29;           /* Resting state offset */
 int16_t gz = 0;           /* Current gyroscope-y sample */
 int16_t gz_prev = 0;        /* Previous gyroscope-y sample */
 int16_t t = 0;
@@ -27,11 +27,11 @@ long int ti;          /* Initial time */
 int16_t drift_counter = 100;
 
 /* TODO:
- *  [ ] Capturing dc value (average of first 5 samples
+ *  [x] Capturing dc value (average of first 5 samples
  *  [ ] Handling start/stop indication by button input
  *    [ ] Configure pin for button input (need additional info from Derek)
  *    [ ] Create interrupt from button press (toggle boolean flag)
- *  [ ] Compile code (library dependencies currently unhandled)
+ *  [x] Compile code (library dependencies currently unhandled)
  */
 
 void i2c_read(uint8_t addr, uint8_t reg, uint8_t nbytes, uint8_t *data) {
@@ -61,7 +61,7 @@ void setup() {
   Serial.begin(BAUD); /* TODO: Is this baud okay? */
   
   /* Set gyroscope low pass filter at 5 Hz */
-  i2c_write_byte(MPU9250_ADDR, 26, 0.06);
+  //i2c_write_byte(MPU9250_ADDR, 26, 0.06);
   
   /* Configure gyroscope range */
   i2c_write_byte(MPU9250_ADDR, 27, GYRO_FULL_SCALE_1000_DPS);
@@ -78,21 +78,23 @@ void setup() {
   /* Store initial time */
   ti = millis();  
 
-  int x = 0;
+  
   for (int i = 0; i < 10; i++) {
     sample();
     delay(10);
-  }
+  } 
   
+  /*
+  int x = 0;
   for (int i = 0; i < 10; i++) {
     sample();
     x += gz;
       delay(100); //CHANGED FROM 100
     }
   dc = x / 10;
+  */
 }
 
-/* Sample accelerometer value */
 void sample() {
   /* Read accelerometer and gyroscope */
   uint8_t buf[14];
@@ -106,19 +108,21 @@ void sample() {
   /* Save previous gyroscope-y sample, read new sample */
   gz_prev = gz; 
   gz = (buf[12] << 8 | buf[13]) - dc;
-
-  /* TODO: Integer division!? Is this okay? Accurate enough? */
   
   /* Add current sample to running integration */
-  //dv += (dt * gz) + (dt * (gz - gz_prev) / 2);
-  dv += dt * (gz + ((gz - gz_prev) >> 1));
-  Serial.println(dv);
+  //dv += dt * (gz + ((gz - gz_prev) >> 1));
+  dv += (dt * gz) + (dt * ((gz - gz_prev) / 2));
+  Serial.print(dv);
+  Serial.print('\t');
+  Serial.println(gz);
 
+  /*
   drift_counter--;
   if (drift_counter == 0) {
     dv += 1;
     drift_counter = 100;
   }
+  */
 }
 
 void callback() {
